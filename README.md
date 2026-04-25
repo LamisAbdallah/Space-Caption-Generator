@@ -186,8 +186,6 @@ IMG_SIZE = 224
 
 ## 👥 Team
 
- Name 
-
 | Alaa orabi |
 | lamis abdallah | 
 | fatma sameh | 
