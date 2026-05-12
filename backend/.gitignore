@@ -1,0 +1,33 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Dataset & Images
+dataset/images/
+dataset/raw_captions.csv
+dataset/neo_hazard_dataset.csv
+dataset/ztf_astronomy_dataset.csv
+
+# Models & Checkpoints
+models/*.pkl
+models/*.pt
+models/*.pth
+*.pth
+
+# Experiments
+experiments/results.csv
+
+# Environment Variables
+.env
+.env.local
+
+# IDEs
+.vscode/
+.idea/

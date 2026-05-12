@@ -1,0 +1,344 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #040816, #0b1026, #120f2b);
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* =========================
+   ANIMATED STARS
+========================= */
+
+body::before{
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(#ff6ec7 1px, transparent 1px),
+        radial-gradient(#00d4ff 1px, transparent 1px);
+
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px, 15px 15px;
+
+    opacity: 0.18;
+    animation: starsMove 60s linear infinite;
+    z-index: -1;
+}
+
+@keyframes starsMove{
+    from{
+        transform: translateY(0);
+    }
+
+    to{
+        transform: translateY(-1000px);
+    }
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+nav{
+    width: 100%;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo{
+    font-family: 'Orbitron', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+
+    background: linear-gradient(to right, #ff6ec7, #7b61ff, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.team{
+    margin-top: 5px;
+    font-size: 14px;
+    color: #d4d4d4;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero{
+    min-height: 90vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    text-align: center;
+    padding: 20px;
+}
+
+.hero h1{
+    font-size: 68px;
+    font-family: 'Orbitron', sans-serif;
+
+    background: linear-gradient(to right, #ff6ec7, #7b61ff, #00d4ff);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    margin-bottom: 25px;
+}
+
+.hero p{
+    width: 70%;
+    max-width: 850px;
+
+    line-height: 1.9;
+    color: #d6d6d6;
+
+    margin-bottom: 40px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    padding: 15px 35px;
+
+    border: none;
+    border-radius: 40px;
+
+    background: linear-gradient(to right, #ff6ec7, #7b61ff);
+
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.35s ease;
+}
+
+.btn:hover{
+    transform: scale(1.06);
+
+    box-shadow:
+        0 0 20px rgba(255,110,199,0.6),
+        0 0 40px rgba(123,97,255,0.5);
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.container{
+    width: 85%;
+    margin: auto;
+    padding-bottom: 80px;
+}
+
+/* =========================
+   GLASS CARD
+========================= */
+
+.card{
+    background: rgba(255,255,255,0.05);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(14px);
+
+    border-radius: 30px;
+
+    padding: 45px;
+    margin-top: 40px;
+
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+
+    transition: 0.4s;
+}
+
+.card:hover{
+    transform: translateY(-5px);
+}
+
+.card h2{
+    margin-bottom: 30px;
+
+    color: #ff6ec7;
+
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input[type="text"]{
+    width: 100%;
+
+    padding: 18px;
+
+    border: none;
+    border-radius: 18px;
+
+    background: #11162d;
+
+    color: white;
+    font-size: 16px;
+
+    margin-bottom: 20px;
+
+    outline: none;
+
+    transition: 0.3s;
+}
+
+input[type="text"]:focus{
+    border: 1px solid #7b61ff;
+
+    box-shadow: 0 0 15px rgba(123,97,255,0.5);
+}
+
+input[type="file"]{
+    margin-bottom: 25px;
+    color: white;
+}
+
+/* =========================
+   BUTTON GROUP
+========================= */
+
+.buttons{
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   RESULT BOX
+========================= */
+
+.result-box{
+    margin-top: 35px;
+
+    background: #0d1328;
+
+    border-radius: 22px;
+
+    padding: 30px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    line-height: 1.9;
+
+    transition: 0.3s;
+}
+
+.result-box:hover{
+    box-shadow: 0 0 25px rgba(0,212,255,0.2);
+}
+
+.result-box h3{
+    margin-bottom: 15px;
+
+    color: #00d4ff;
+
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align: center;
+
+    padding: 30px;
+
+    color: #a7a7a7;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+
+    margin-top: 50px;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media(max-width: 992px){
+
+    .hero h1{
+        font-size: 50px;
+    }
+
+    .hero p{
+        width: 90%;
+    }
+}
+
+@media(max-width: 768px){
+
+    nav{
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hero h1{
+        font-size: 38px;
+    }
+
+    .card{
+        padding: 25px;
+    }
+
+    .buttons{
+        flex-direction: column;
+    }
+
+    .btn{
+        width: 100%;
+    }
+}
+
+@media(max-width: 480px){
+
+    .hero h1{
+        font-size: 30px;
+    }
+
+    .hero p{
+        font-size: 14px;
+    }
+
+    .logo{
+        font-size: 20px;
+    }
+}

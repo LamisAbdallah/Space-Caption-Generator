@@ -1,0 +1,8 @@
+pandas
+requests
+torch
+torchvision
+transformers
+Pillow
+scikit-learn==1.5.0
+gradio
