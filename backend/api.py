@@ -8,7 +8,11 @@ from PIL import Image
 
 # Import existing models
 from models.vlm_model import SpaceSiglipModel
+from models.clip_model import SpaceClipModel
+from models.caption_model import SpaceCaptionModel
 from models.tabular_predictor import NEOHazardPredictor
+from models.resnet_transformer_model import SpaceResnetTransformerModel
+from models.swin_lstm_model import SpaceSwinLSTMModel
 
 app = FastAPI(title="Space Intelligence Engine API")
 
@@ -55,6 +59,39 @@ class ModelManager:
             self.active_model_name = "siglip"
         return self.active_model_instance
 
+    def get_clip(self):
+        if self.active_model_name != "clip":
+            self._unload_current()
+            print("Loading CLIP into VRAM...")
+            self.active_model_instance = SpaceClipModel()
+            self.active_model_instance.build_or_load_index(self.dataset_dir)
+            self.active_model_name = "clip"
+        return self.active_model_instance
+
+    def get_captioner(self):
+        if self.active_model_name != "caption":
+            self._unload_current()
+            print("Loading ViT-GPT2 Captioner into VRAM...")
+            self.active_model_instance = SpaceCaptionModel()
+            self.active_model_name = "caption"
+        return self.active_model_instance
+
+    def get_resnet_captioner(self):
+        if self.active_model_name != "resnet_caption":
+            self._unload_current()
+            print("Loading ResNet50+Transformer Captioner into VRAM...")
+            self.active_model_instance = SpaceResnetTransformerModel()
+            self.active_model_name = "resnet_caption"
+        return self.active_model_instance
+
+    def get_swin_lstm_captioner(self):
+        if self.active_model_name != "swin_lstm_caption":
+            self._unload_current()
+            print("Loading Swin-LSTM Captioner into VRAM...")
+            self.active_model_instance = SpaceSwinLSTMModel()
+            self.active_model_name = "swin_lstm_caption"
+        return self.active_model_instance
+
     def get_neo_predictor(self):
         # Random forest takes zero VRAM, but keeping the pattern intact
         if self.active_model_name != "neo":
@@ -74,9 +111,12 @@ manager = ModelManager()
 
 
 @app.post("/api/siglip/search_text")
-async def siglip_search_text(query: str=Form(...)):
+async def vlm_search_text(
+    query: str=Form(...),
+    model_id: str=Form("siglip")
+):
     try:
-        model = manager.get_siglip()
+        model = manager.get_siglip() if model_id == "siglip" else manager.get_clip()
         raw_results = model.search_by_text(query, top_k=10)
         
         # Convert absolute computer paths to server URLs
@@ -95,9 +135,12 @@ async def siglip_search_text(query: str=Form(...)):
 
 
 @app.post("/api/siglip/search_image")
-async def siglip_search_image(image: UploadFile=File(...)):
+async def vlm_search_image(
+    image: UploadFile=File(...),
+    model_id: str=Form("siglip")
+):
     try:
-        model = manager.get_siglip()
+        model = manager.get_siglip() if model_id == "siglip" else manager.get_clip()
         contents = await image.read()
         pil_image = Image.open(io.BytesIO(contents)).convert("RGB")
         caption, raw_results = model.search_by_image(pil_image, top_k=10)
@@ -113,6 +156,30 @@ async def siglip_search_image(image: UploadFile=File(...)):
             })
             
         return {"caption": caption, "results": results_urls}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/caption/generate")
+async def generate_caption(
+    image: UploadFile=File(...),
+    model_id: str=Form("vit_gpt2")
+):
+    try:
+        if model_id == "resnet_transformer":
+            model = manager.get_resnet_captioner()
+        elif model_id == "swin_lstm":
+            model = manager.get_swin_lstm_captioner()
+        else:
+            model = manager.get_captioner()
+            
+        contents = await image.read()
+        pil_image = Image.open(io.BytesIO(contents)).convert("RGB")
+        
+        # Generate entirely new caption
+        ai_caption = model.generate_caption(pil_image)
+        
+        return {"caption": ai_caption}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

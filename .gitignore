@@ -23,7 +23,9 @@ frontend/uploads/
 .ipynb_checkpoints/
 
 # Heavy Machine Learning Weights / Caches
-# (Uncomment below if you don't want to push your generated model weights/embeddings)
-# backend/models/*.pt
-# backend/models/*.pkl
-# backend/space_image_index.pkl
+backend/models/*.pt
+backend/models/*.pth
+backend/models/*.pkl
+backend/models/*.safetensors
+backend/space_image_index.pkl
+swin_lstm_decoder/
