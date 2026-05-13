@@ -13,12 +13,21 @@ const resultBox = document.getElementById("vlmResultBox");
 // Tab Elements
 const tabVLM = document.getElementById("tabVLM");
 const tabNEO = document.getElementById("tabNEO");
+const tabCaption = document.getElementById("tabCaption");
+
 const vlmTabContent = document.getElementById("vlmTabContent");
 const neoTabContent = document.getElementById("neoTabContent");
+const captionTabContent = document.getElementById("captionTabContent");
 
 // NEO Elements
 const neoForm = document.getElementById("neoForm");
 const neoResultBox = document.getElementById("neoResultBox");
+
+// Caption Elements
+const captionForm = document.getElementById("captionForm");
+const captionImageInput = document.getElementById("captionImageInput");
+const generateCaptionBtn = document.getElementById("generateCaptionBtn");
+const captionResultBox = document.getElementById("captionResultBox");
 
 // Modal elements
 const modal = document.getElementById("imageModal");
@@ -32,20 +41,28 @@ const FASTAPI_URL = "http://127.0.0.1:8000";
 /* =========================
    TAB SWITCHING LOGIC
 ========================= */
-if (tabVLM && tabNEO) {
-  tabVLM.addEventListener("click", () => {
-    tabVLM.classList.add("active");
-    tabNEO.classList.remove("active");
-    vlmTabContent.classList.add("active");
-    neoTabContent.classList.remove("active");
-  });
+const tabs = ["VLM", "Caption", "NEO"];
 
-  tabNEO.addEventListener("click", () => {
-    tabNEO.classList.add("active");
-    tabVLM.classList.remove("active");
-    neoTabContent.classList.add("active");
-    vlmTabContent.classList.remove("active");
+function switchTab(activeTab) {
+  tabs.forEach((tab) => {
+    const btn = document.getElementById("tab" + tab);
+    const content = document.getElementById(tab.toLowerCase() + "TabContent");
+    if (btn && content) {
+      if (tab === activeTab) {
+        btn.classList.add("active");
+        content.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+        content.classList.remove("active");
+      }
+    }
   });
+}
+
+if (tabVLM) {
+  tabVLM.addEventListener("click", () => switchTab("VLM"));
+  tabNEO.addEventListener("click", () => switchTab("NEO"));
+  tabCaption.addEventListener("click", () => switchTab("Caption"));
 }
 
 /* =========================
@@ -130,6 +147,11 @@ if (form) {
       let endpoint = "";
       const formData = new FormData();
 
+      const vlmModelSelect = document.getElementById("vlm_model_select");
+      if (vlmModelSelect) {
+        formData.append("model_id", vlmModelSelect.value);
+      }
+
       if (hasText) {
         endpoint = `${FASTAPI_URL}/api/siglip/search_text`;
         formData.append("query", textInput.value.trim());
@@ -191,6 +213,56 @@ if (form) {
       });
     } catch (error) {
       resultBox.innerHTML = `<p style="color:red;">Backend connection error ❌ (Make sure FastAPI is running on port 8000)</p>`;
+    }
+  });
+}
+
+/* =========================
+   FORM SUBMIT (CAPTION GENERATOR)
+========================= */
+if (captionForm) {
+  captionForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!captionImageInput.files.length) return;
+
+    captionResultBox.style.display = "block";
+    captionResultBox.innerHTML = `
+      <div style="text-align: center;">
+          <p style="color:#00d4ff;">ViT-GPT2 is analyzing image... 🤖</p>
+          <div class="loader"></div>
+      </div>
+    `;
+
+    try {
+      const formData = new FormData();
+      formData.append("image", captionImageInput.files[0]);
+
+      const captionModelSelect = document.getElementById("caption_model_select");
+      if (captionModelSelect) {
+        formData.append("model_id", captionModelSelect.value);
+      }
+
+      const response = await fetch(`${FASTAPI_URL}/api/caption/generate`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        captionResultBox.innerHTML = `<p style="color:red;">Error: ${data.detail} ❌</p>`;
+        return;
+      }
+
+      captionResultBox.innerHTML = `
+        <h3 style="color:#ff6ec7; text-align: center;">AI Generated Description</h3>
+        <p style="text-align: center; color: white; font-size: 18px; margin-top: 15px; border-left: 4px solid #7b61ff; padding-left: 15px; background: rgba(123, 97, 255, 0.1); border-radius: 5px; padding: 15px; display: inline-block; width: 100%;">
+          "${data.caption}"
+        </p>
+      `;
+    } catch (error) {
+      captionResultBox.innerHTML = `<p style="color:red;">Backend connection error ❌</p>`;
     }
   });
 }

@@ -385,12 +385,23 @@
     <div class="card">
       <div class="tabs-nav">
         <button class="tab-btn active" id="tabVLM">Deep Space Vision</button>
+        <button class="tab-btn" id="tabCaption">Image Caption Generator</button>
         <button class="tab-btn" id="tabNEO">Asteroid Predictor</button>
       </div>
 
       <!-- VLM TAB -->
       <div id="vlmTabContent" class="tab-content active">
         <h2>Deep Space Vision Search</h2>
+
+        <div style="margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 15px;">
+          <label style="font-family: 'Orbitron', sans-serif; color: #00d4ff;">Select AI Model:</label>
+          <select id="vlm_model_select"
+            style="padding: 10px; border-radius: 10px; background: #11162d; color: white; border: 1px solid rgba(255, 255, 255, 0.2); font-family: 'Poppins', sans-serif; cursor: pointer;">
+            <option value="siglip">SigLIP 2</option>
+            <option value="clip">CLIP</option>
+          </select>
+        </div>
+
         <p style="color:#aaa; margin-bottom:20px;">Provide either an Image or Text to search our cosmic database (You
           cannot provide both at the same time).</p>
 
@@ -412,6 +423,36 @@
         <!-- Result -->
         <div class="result-box" id="vlmResultBox">
           <p style="color:#aaa; text-align: center;">Vision results will appear here...</p>
+        </div>
+      </div>
+
+      <!-- CAPTION GENERATOR TAB -->
+      <div id="captionTabContent" class="tab-content">
+        <h2>AI Image Captioning</h2>
+        
+        <div style="margin-bottom: 20px; display: flex; justify-content: center; align-items: center; gap: 15px;">
+          <label style="font-family: 'Orbitron', sans-serif; color: #00d4ff;">Select AI Model:</label>
+          <select id="caption_model_select"
+            style="padding: 10px; border-radius: 10px; background: #11162d; color: white; border: 1px solid rgba(255, 255, 255, 0.2); font-family: 'Poppins', sans-serif; cursor: pointer;">
+            <option value="vit_gpt2">ViT-GPT2</option>
+            <option value="resnet_transformer">ResNet50 + Transformer</option>
+            <option value="swin_lstm">Swin Transformer + LSTM</option>
+          </select>
+        </div>
+
+        <p style="color:#aaa; margin-bottom:20px;">Upload a single image and let the Generative Engine write a
+          detailed description.</p>
+
+        <form id="captionForm" enctype="multipart/form-data">
+          <input type="file" id="captionImageInput" name="image" accept="image/*" required>
+
+          <div class="buttons" style="justify-content: center;">
+            <button type="submit" id="generateCaptionBtn" class="btn">Generate Custom Caption</button>
+          </div>
+        </form>
+
+        <!-- Result -->
+        <div class="result-box" id="captionResultBox" style="display: none;">
         </div>
       </div>
 
